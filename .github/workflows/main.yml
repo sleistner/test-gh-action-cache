@@ -13,21 +13,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache Text
+      - name: Cache Text 1
         id: cache-text
         uses: actions/cache@v2
         with:
-          path: ./test.txt
+          path: ./test-1.txt
           key: ${{ runner.os }}-text
 
-      - name: Generate Text
-        if: steps.cache-text.outputs.cache-hit != 'true'
-        run: echo "test" >> ./test.txt
+      - name: Generate Text 1
+        if: steps.cache-text-1.outputs.cache-hit != 'true'
+        run: echo "test 1" >> ./test-1.txt
 
-      - name: Use Text
+      - name: Use Text 1
         run: |
-          ls -la
-          cat ./test.txt
+          cat ./test-1.txt
           
       - name: Cache Text 2
         id: cache-text-2
@@ -42,5 +41,4 @@ jobs:
 
       - name: Use Text 2
         run: |
-          ls -la
           cat ./test-2.txt
