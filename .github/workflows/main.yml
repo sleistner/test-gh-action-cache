@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  install-dependencies:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,15 +18,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./test-1.txt
-          key: ${{ runner.os }}-text
+          key: ${{ runner.os }}-text-1
 
       - name: Generate Text 1
         if: steps.cache-text-1.outputs.cache-hit != 'true'
         run: echo "test 1" >> ./test-1.txt
-
-      - name: Use Text 1
-        run: |
-          cat ./test-1.txt
           
       - name: Cache Text 2
         id: cache-text-2
@@ -38,6 +34,28 @@ jobs:
       - name: Generate Text 2
         if: steps.cache-text-2.outputs.cache-hit != 'true'
         run: echo "test 2" >> ./test-2.txt
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [install-dependencies]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Restore Cache Text 1
+        uses: actions/cache@v2
+        with:
+          path: ./test-1.txt
+          key: ${{ runner.os }}-text-1
+
+      - name: Use Text 1
+        run: |
+          cat ./test-1.txt
+          
+      - name: Restore Cache Text 2
+        uses: actions/cache@v2
+        with:
+          path: ./test-2.txt
+          key: ${{ runner.os }}-text-2
 
       - name: Use Text 2
         run: |
