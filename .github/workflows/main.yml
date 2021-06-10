@@ -27,4 +27,20 @@ jobs:
       - name: Use Text
         run: |
           ls -la
-          echo ./test.txt
+          cat ./test.txt
+          
+      - name: Cache Text 2
+        id: cache-text-2
+        uses: actions/cache@v2
+        with:
+          path: ./test-2.txt
+          key: ${{ runner.os }}-text-2
+
+      - name: Generate Text 2
+        if: steps.cache-text-2.outputs.cache-hit != 'true'
+        run: echo "test 2" >> ./test-2.txt
+
+      - name: Use Text 2
+        run: |
+          ls -la
+          cat ./test-2.txt
