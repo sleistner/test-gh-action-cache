@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache Text
+        id: cache-text
+        uses: actions/cache@v2
+        with:
+          path: ./test.txt
+          key: ${{ runner.os }}-text
+
+      - name: Generate Text
+        if: steps.cache-text.outputs.cache-hit != 'true'
+        run: echo "test" >> ./test.txt
+
+      - name: Use Text
+        run: |
+          ls -la
+          echo ./test.txt
